@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Copier - Color Format Converter</title>
+    <meta name="description" content="Convert and copy colors between different formats including RGB, CMYK, Pantone, and color names">
+    <link href="./dist/output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 antialiased">
+    <div class="min-h-screen flex flex-col" role="application">
+        <!-- Skip to main content -->
+        <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:text-black focus:z-50">
+            Skip to main content
+        </a>
+
+        <!-- Header -->
+        <header class="fixed top-0 left-0 right-0 z-10 backdrop-blur-sm bg-white/80 dark:bg-gray-900/80 border-b border-gray-200/50 dark:border-gray-800/50" role="banner">
+            <div class="max-w-screen-xl mx-auto px-6 py-3 flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div>
+                        <h1 class="text-lg font-semibold text-gray-900 dark:text-white">Color Copier</h1>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Convert and copy colors</p>
+                    </div>
+                </div>
+                <button id="darkModeToggle" 
+                        class="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700/80 transition-all duration-200"
+                        aria-label="Toggle dark mode"
+                        role="switch"
+                        aria-checked="false">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 pt-20" id="main-content">
+            <div class="max-w-screen-xl mx-auto px-6 py-8">
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <!-- Left Column: Color Input and Preview -->
+                    <div class="space-y-8" role="region" aria-label="Color input section">
+                        <!-- Color Input -->
+                        <div class="space-y-4">
+                            <label for="hexInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Hex Color
+                                <span class="sr-only">(Format: #RRGGBB)</span>
+                            </label>
+                            <input type="text" 
+                                   id="hexInput" 
+                                   class="w-full p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 
+                                          rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                                          placeholder-gray-400 dark:placeholder-gray-500 transition-all duration-200"
+                                   placeholder="#000000"
+                                   aria-label="Enter hex color code"
+                                   aria-describedby="hexInputHelp"
+                                   pattern="^#?[0-9A-Fa-f]{6}$">
+                            <div id="hexInputHelp" class="sr-only">Enter a hex color code with or without the # symbol, for example: #FF0000 or FF0000</div>
+                        </div>
+
+                        <!-- Color Preview -->
+                        <div class="aspect-video w-full rounded-xl overflow-hidden shadow-lg border border-gray-200/50 dark:border-gray-800/50">
+                            <div id="colorPreview" 
+                                 class="w-full h-full transition-colors duration-200" 
+                                 style="background-color: #000000;"
+                                 role="img" 
+                                 aria-label="Color preview">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Color Formats -->
+                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200/50 dark:border-gray-800/50 overflow-hidden" 
+                         role="region" aria-label="Color format results">
+                        <div class="divide-y divide-gray-200 dark:divide-gray-700/50">
+                            <!-- RGB -->
+                            <div class="group px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-20">
+                                        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">RGB</h2>
+                                    </div>
+                                    <div id="rgbResult" 
+                                         class="flex-1 text-base text-gray-900 dark:text-white cursor-pointer" 
+                                         role="button" 
+                                         tabindex="0" 
+                                         aria-label="RGB value, click to copy"></div>
+                                    <div class="text-xs text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200">Click to copy</div>
+                                </div>
+                            </div>
+
+                            <!-- CMYK -->
+                            <div class="group px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-20">
+                                        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">CMYK</h2>
+                                    </div>
+                                    <div id="cmykResult" 
+                                         class="flex-1 text-base text-gray-900 dark:text-white cursor-pointer" 
+                                         role="button" 
+                                         tabindex="0" 
+                                         aria-label="CMYK value, click to copy"></div>
+                                    <div class="text-xs text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200">Click to copy</div>
+                                </div>
+                            </div>
+
+                            <!-- Pantone -->
+                            <div class="group px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-20">
+                                        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">Pantone</h2>
+                                    </div>
+                                    <div id="pantoneResult" 
+                                         class="flex-1 text-base text-gray-900 dark:text-white cursor-pointer" 
+                                         role="button" 
+                                         tabindex="0" 
+                                         aria-label="Pantone value, click to copy"></div>
+                                    <div class="text-xs text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200">Click to copy</div>
+                                </div>
+                            </div>
+
+                            <!-- Color Name -->
+                            <div class="group px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-20">
+                                        <h2 class="text-sm font-medium text-gray-500 dark:text-gray-400">Name</h2>
+                                    </div>
+                                    <div id="nameResult" 
+                                         class="flex-1 text-base text-gray-900 dark:text-white cursor-pointer" 
+                                         role="button" 
+                                         tabindex="0" 
+                                         aria-label="Color name value, click to copy"></div>
+                                    <div class="text-xs text-gray-400 dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200">Click to copy</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" 
+         class="fixed bottom-4 right-4 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg shadow-lg transform translate-y-full opacity-0 transition-all duration-200"
+         role="status"
+         aria-live="polite">
+        Copied to clipboard!
+    </div>
+
+    <script src="./src/app.js"></script>
+</body>
+</html>

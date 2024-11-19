@@ -1,0 +1,13 @@
+{
+  "name": "color-copier",
+  "version": "1.0.0",
+  "description": "A modern color conversion and copying tool",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "build": "npx tailwindcss -i ./src/input.css -o ./dist/output.css"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.3.0"
+  }
+}
